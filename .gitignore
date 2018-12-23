@@ -1,0 +1,12 @@
+# Jetbrains IDE
+.idea/*
+
+#  Local .terraform directories
+**/.terraform/*
+
+# .tfstate.backup
+*.tfstate.backup*
+
+# .tfvars files
+*.tfvars
+
