@@ -2,7 +2,7 @@
 provider "aws" {
   region = "${var.aws_region}"
   shared_credentials_file = "${var.shared_credentials_file_path}"
-  profile = "${var.shared_credentials_file_path}"
+  profile = "${var.shared_credentials_profile}"
 }
 
 #Creates the VPC, routes, Internet Gateway and 1 public and 1 private subnet
@@ -47,7 +47,7 @@ module "instances" {
 
 #Runs the ansible configuration playbook to install HTTP server (Nginx with PHP-FPM) and upload needed files
 resource "null_resource" "cluster" {
-
+  depends_on = ["module.instances"]
   provisioner "local-exec" {
     command     = "ansible-playbook -u root --private-key ${var.ssh_private_key_path} -e 'ansible_python_interpreter=/usr/bin/python3' ${var.ansible_playbook_path} -i ${module.instances.instances_public_ips} "
   }

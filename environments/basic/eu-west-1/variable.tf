@@ -3,7 +3,6 @@ variable "aws_region" {
   default     = "eu-west-1"
 }
 
-
 variable "ssh_public_key_path" {
   type = "string"
 }

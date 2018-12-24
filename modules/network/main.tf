@@ -19,10 +19,12 @@ resource "aws_route" "default_internet_route" {
 resource "aws_subnet" "private" {
   vpc_id                  = "${aws_vpc.default.id}"
   cidr_block              = "${var.private_subnet_cidr_block}"
+  availability_zone = "eu-west-1a"
 }
 
 # Public subnet -- here we will keep the Load Balancer
 resource "aws_subnet" "public" {
   vpc_id                  = "${aws_vpc.default.id}"
   cidr_block              = "${var.public_subnet_cidr_block}"
+  availability_zone = "eu-west-1b"
 }

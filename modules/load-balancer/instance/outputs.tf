@@ -7,3 +7,6 @@ output "target_group_arn" {
 output "load_balancer_listener_arn" {
   value = "${aws_lb_listener.default.arn}"
 }
+output "load_balancer_public_domain" {
+  value = "${aws_lb.http_only.dns_name}"
+}

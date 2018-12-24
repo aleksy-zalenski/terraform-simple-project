@@ -10,3 +10,7 @@
 # .tfvars files
 *.tfvars
 
+!terraform.tfvars
+
+aws_access_key*
+

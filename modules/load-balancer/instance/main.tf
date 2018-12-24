@@ -3,7 +3,6 @@ resource "aws_lb" "http_only" {
   load_balancer_type = "application"
   subnets         = ["${var.subnets}"]
   security_groups = ["${var.elb_security_groups}"]
-
 }
 
 resource "aws_lb_target_group" "http_target_group" {
