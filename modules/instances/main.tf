@@ -1,38 +1,30 @@
 resource "aws_key_pair" "auth" {
   key_name   = "${var.key_name}"
-  public_key = "${file(var.public_key_path)}"
+  public_key = "${file("${var.public_key_path}")}"
 }
 
-resource "aws_instance" "web" {
-  # The connection block tells our provisioner how to
-  # communicate with the resource (instance)
-  connection {
-    # The default username for our AMI
-    user = "ubuntu"
+resource "aws_launch_configuration" "launch_configuration" {
+  name_prefix   = "default_launchconfig"
+  image_id      = "${var.ami_id}"
+  instance_type = "${var.instance_type}"
+  key_name = "${aws_key_pair.auth.key_name}"
+  associate_public_ip_address = true
+  security_groups = ["${var.security_groups}"]
+}
 
-    # The connection will use the local SSH agent for authentication.
+resource "aws_autoscaling_group" "autoscaling_group" {
+  desired_capacity   = 2
+  max_size           = 2
+  min_size           = 2
+  launch_configuration = "${aws_launch_configuration.launch_configuration.name}"
+
+  target_group_arns = ["${var.target_group_arns}"]
+  vpc_zone_identifier = ["${var.private_subnet_id}"]
+
+  tag {
+    key                 = "http_server"
+    value               = "true"
+    propagate_at_launch = true
   }
-
-  instance_type = "t2.micro"
-
-  # Lookup the correct AMI based on the region
-  # we specified
-  ami = "${var.ami_id}"
-
-  key_name = "${aws_key_pair.auth.id}"
-
-  vpc_security_group_ids = "${var.security_groups}"
-
-  subnet_id = "${var.private_subnet_id}"
-
-  # We run a remote provisioner on the instance after creating it.
-  # In this case, we just install nginx and start it. By default,
-  # this should be on port 80
-  provisioner "remote-exec" {
-    inline = [
-      "sudo apt-get -y update",
-      "sudo apt-get -y install nginx",
-      "sudo service nginx start",
-    ]
-  }
+  #depends_on = ["${var.internet_gateway_id}"]
 }

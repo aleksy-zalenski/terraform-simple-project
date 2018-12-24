@@ -19,8 +19,7 @@ resource "aws_security_group" "http_only_access_from_internet" {
   }
 }
 
-# Our default security group to access
-# the instances over SSH and HTTP
+
 resource "aws_security_group" "internet_ssh_access" {
   name        = "SSH Access from Internet"
   vpc_id      = "${var.vpc_id}"
@@ -42,7 +41,7 @@ resource "aws_security_group" "internet_ssh_access" {
   }
 }
 
-# A security group for the ELB so it is accessible via the web
+# A security group for the LB so it is accessible via the web
 resource "aws_security_group" "http_only_access_from_vpc" {
   name        = "HTTP-Only Access from our default VPC"
   vpc_id      = "${var.vpc_id}"
@@ -52,7 +51,7 @@ resource "aws_security_group" "http_only_access_from_vpc" {
     from_port   = 80
     to_port     = 80
     protocol    = "tcp"
-    security_groups = ["${var.vpc_id}"]
+    security_groups = ["${aws_security_group.http_only_access_from_internet.id}"]
   }
 
   # outbound internet access

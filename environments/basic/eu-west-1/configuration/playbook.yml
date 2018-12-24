@@ -1,0 +1,53 @@
+---
+
+- name: HTTP server installation
+  hosts: all
+  remote_user: ubuntu
+  become: true
+  tasks:
+  - name: apt-get update
+    apt:
+      update_cache: yes
+  - name: Install php
+    apt:
+      name: php7.2-fpm
+      state: present
+  - name: install nginx
+    apt:
+      name: nginx
+      state: present
+  - name: Copy nginx configuration.
+    template:
+      src: nginx.conf
+      dest: /etc/nginx/nginx.conf
+  - name: Change owner of /var/www/html directory
+    file:
+      path: /var/www/html
+      owner: www-data
+      group: www-data
+  - name: Start fpm
+    service:
+      name: php7.2-fpm
+      state: restarted
+  - name: Start nginx
+    service:
+      name: nginx
+      state: restarted
+- name: HTTP server configuration
+  hosts: all
+  remote_user: ubuntu
+  become: true
+  become_user: www-data
+  tasks:
+  - name: Copy php file!
+    template:
+      src: index.php
+      dest: /var/www/html/index.php
+  - name: Copy contact file!
+    template:
+      src: contact.php
+      dest: /var/www/html/contact.php
+  - name: Copy about file!
+    template:
+      src: about.php
+      dest: /var/www/html/about.php

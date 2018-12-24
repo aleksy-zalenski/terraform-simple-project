@@ -7,21 +7,33 @@ variable "private_subnet_id" {
 }
 variable "ami_id" {
   type = "string"
-  default = ""
+  default = "ami-00035f41c82244dab"
 }
 
 variable "public_key_path" {
-  description = <<DESCRIPTION
-Path to the SSH public key to be used for authentication.
-Ensure this keypair is added to your local SSH agent so provisioners can
-connect.
-Example: ~/.ssh/terraform.pub
-DESCRIPTION
+  type = "string"
 }
 
 variable "key_name" {
   description = "Desired name of AWS key pair"
+  type = "string"
 }
 
+variable "instance_type" {
+  type = "string"
+  default = "t2.micro"
+}
+
+variable "load_balancers" {
+  type = "list"
+}
+
+variable "internet_gateway_id" {
+  type = "string"
+}
+
+variable "target_group_arns" {
+  type = "list"
+}
 
 

@@ -3,18 +3,29 @@ variable "aws_region" {
   default     = "eu-west-1"
 }
 
-variable "public_key_path" {
-  description = <<DESCRIPTION
-Path to the SSH public key to be used for authentication.
-Ensure this keypair is added to your local SSH agent so provisioners can
-connect.
-Example: ~/.ssh/terraform.pub
-DESCRIPTION
+
+variable "ssh_public_key_path" {
+  type = "string"
 }
 
-variable "key_name" {
-  description = "Desired name of AWS key pair"
+variable "ssh_private_key_path" {
+  type = "string"
 }
 
+variable "shared_credentials_file_path" {
+  type = "string"
+}
 
+variable "shared_credentials_profile" {
+  type = "string"
+}
 
+variable "ansible_playbook_path" {
+  type = "string"
+  default = "/home/aleksy/Private/codete-devops-task/environments/basic/eu-west-1/configuration/playbook.yml"
+}
+
+variable "default_instances_ami" {
+  type = "string"
+  default = "ami-00035f41c82244dab"
+}
